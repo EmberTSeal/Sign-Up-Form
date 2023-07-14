@@ -1,100 +1,152 @@
 const allInputs = document.querySelectorAll('input');
 const submitButton = document.querySelector('button');
+const form = document.querySelector('form');
+const errorMessageHolder = document.querySelector('#errorMessageHolder')
+
+let submissionAttempt = false;
+let validateResult = 0;
 
 allInputs.forEach(input => {
     input.value = '';
 })
 
 document.addEventListener('click', () => {
-    validateForm();
+    validateInputs();
 })
 
-submitButton.addEventListener('click', () =>{
-    validateForm();
+document.addEventListener('keydown', (e) => {
+    if (e.key === "Tab") {
+        validateInputs();
+    }
 })
 
 
-function validateForm(){
-    passwordValidate();
-    namesValidate();
-    emailValidate();
-    phoneNumberValidate();
+function validateInputs() {
+    if(submissionAttempt === false){
+        if(allInputs[0]!='' || allInputs[1]!='')
+            namesValidate();
+        if(allInputs[2]!='')
+            emailValidate();
+        if(allInputs[3]!='')
+            phoneNumberValidate();
+        if(allInputs[4]!='' ||allInputs[5]!='')
+            passwordValidate();
+    }    
+    else{
+        const name = namesValidate();
+        const email = emailValidate();
+        const pass = passwordValidate();
+        const phn = phoneNumberValidate();
+        return name && pass && email && phn;
+    }
 }
-// document.addEventListener('keydown', e => {
-//     if (e.key === 'Tab') {
-//         const focused = document.querySelector(':focus');
-//         console.log(focused);
-//     }
-// })
 
-function phoneNumberValidate(){
-    let phoneNumber = allInputs[3];
-    if(phoneNumber.value!=''){
-        if(useRegexPhoneNumber(phoneNumber.value)){
-            phoneNumber.classList.add('checkPassed');
-            phoneNumber.classList.remove('error');
+function validateBeforeSubmission(){
+    submissionAttempt = true;
+    validateResult = validateInputs();
+}
+
+function validateForm() {
+    validateBeforeSubmission();
+    if (validateResult) {
+        errorMessageHolder.style.display = 'none';
+        setTimeout(function(){alert('Form submitted!')}, 10);
+        submissionAttempt = false;
+        return true;
+    }
+    else {
+        if (errorMessageHolder.childNodes.length === 0) {
+            const errorMessage = document.createElement('p');
+            errorMessage.textContent = "Errors detected. Please try again after fixing them.";
+            errorMessage.style.color = 'rgb(218,27,27)'
+            errorMessageHolder.append(errorMessage);
         }
-        else{
-            phoneNumber.classList.add('error');
-            phoneNumber.classList.remove('checkPassed');
+        window.history.back();
+        submissionAttempt = false;
+        return false;
+    }
+}
+
+function phoneNumberValidate() {
+    let phoneNumber = allInputs[3];
+    if (phoneNumber.value != '') {
+        if (useRegexPhoneNumber(phoneNumber.value)) {
+            checkPassedUpdateDisplay(phoneNumber);
+            return 1;
+        }
+        else {
+            errorUpdateDisplay(phoneNumber);
+            return 0;
         }
     }
-
+    else if (phoneNumber.value === '' && submissionAttempt === true) {
+        errorUpdateDisplay(phoneNumber);
+        return 0;
+    }
 }
 
 function emailValidate() {
     const email = allInputs[2];
     if (email.value != '') {
         if (useRegexEmail(email.value)) {
-            email.classList.add('checkPassed');
-            email.classList.remove('error');
+            checkPassedUpdateDisplay(email);
+            return 1;
         }
         else {
-            email.classList.add('error');
-            email.classList.remove('checkPassed');
+            errorUpdateDisplay(email);
+            return 0;
         }
+    }
+    else if (email.value === '' && submissionAttempt === true) {
+        errorUpdateDisplay(email);
+        return 0;
     }
 }
 
 function passwordValidate() {
     const password1 = allInputs[4];
     const password2 = allInputs[5];
-    if (password1.value != '' && password2.value != '') {
-        if (password1.value != password2.value) {
-            password1.classList.add('error');
-            password1.classList.remove('checkPassed');
-            password2.classList.add('error');
-            password2.classList.remove('checkPassed');
+    if (password1.value !== '' && password2.value !== ''){
+        if (password1.value !== password2.value) {
+            errorUpdateDisplay(password1);
+            errorUpdateDisplay(password2);
+            return 0;
         }
         else {
-            password1.classList.remove('error');
-            password1.classList.add('checkPassed');
-            password2.classList.remove('error');
-            password2.classList.add('checkPassed');
+            checkPassedUpdateDisplay(password1);
+            checkPassedUpdateDisplay(password2);
+            return 1;
         }
+    }
+    else if (password1.value === '' && password2.value === '' && submissionAttempt === true) {
+        errorUpdateDisplay(password1);
+        errorUpdateDisplay(password2);
+        return 0;
     }
 }
 
 function namesValidate() {
     const firstName = allInputs[0];
     const lastName = allInputs[1];
-    if (firstName.value != '') {
-        if (useRegexName(firstName.value)) {
-            firstName.classList.add('checkPassed');
+    let result = nameIndividuallyValidate(firstName)*nameIndividuallyValidate(lastName);
+    return result;
+    
+}
+
+function nameIndividuallyValidate(input) {
+    if (input.value !== '') {
+        if (useRegexName(input.value)) {
+            checkPassedUpdateDisplay(input);
+            return 1;
         }
         else {
-            firstName.classList.remove('checkPassed');
-            firstName.classList.add('error');
+            errorUpdateDisplay(input);
+            return 0;
         }
     }
-    if (lastName.value != '') {
-        if (useRegexName(lastName.value)) {
-            lastName.classList.add('checkPassed');
-        }
-        else {
-            lastName.classList.remove('checkPassed');
-            lastName.classList.add('error');
-        }
+    else if (input.value === '' && submissionAttempt === true) {
+        errorUpdateDisplay(input);
+        return 0;
     }
 }
 
@@ -110,7 +162,17 @@ function useRegexEmail(input) {
     return regex.test(input);
 }
 
-function useRegexPhoneNumber(input){
-    let regex = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/   
+function useRegexPhoneNumber(input) {
+    let regex = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/
     return regex.test(input);
+}
+
+function errorUpdateDisplay(input) {
+    input.classList.add('error');
+    input.classList.remove('checkPassed');
+}
+
+function checkPassedUpdateDisplay(input) {
+    input.classList.add('checkPassed');
+    input.classList.remove('error');
 }

@@ -18,45 +18,52 @@
     </div>
     <div class="content">
         <div class="instruction">
-            <p>This is not a real online service! You know you need something like this in your life to help you realise your deepest dreams. Sign up <em>now</em> to get started.</p>
+            <p>This is not a real online service! You know you need something like this in your life to help you realise
+                your deepest dreams. Sign up <em>now</em> to get started.</p>
             <p>You <em>know</em> you want to.</p>
         </div>
-        <form action="#" id="account-create">
-                <h2>Let's get started!</h2>
-                <fieldset>
-                    <div class="form-section">
-                        <label for="firstname">First Name</label>
-                        <input tabindex="1" type="text" name="firstname" id="firstname">
-                    </div>
-                    <div class="form-section">
-                        <label for="lastname">Last Name</label>
-                        <input tabindex="1" type="text" name="lastname" id="lastname">
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <div class="form-section">
-                        <label for="email">Email</label>
-                        <input tabindex="1" type="email" name="email" id="email">
-                    </div>
-                    <div class="form-section">
-                        <label for="contact">Phone Number</label>
-                        <input tabindex="1" type="tel" maxlength="10" name="contact" id="contact">
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <div class="form-section">
-                        <label for="password1">Password</label>
-                        <input tabindex="1" type="password" name="password1" id="password1">
-                    </div>
-                    <div class="form-section">
-                        <label for="password2">Confirm Password</label>
-                        <input tabindex="1" type="password" name="password2" id="password2">
-                    </div>
-                </fieldset>
-         </form>
-         <button form="account-create" type="submit">Create account</button>
-         <p>Already have an account? <a href="#">Log in</a></p>
+        <form action="#" id="account-create" onsubmit="event.preventDefault(); validateForm();">
+            <h2>Let's get started!</h2>
+            <fieldset>
+                <div class="form-section">
+                    <label for="firstname">First Name</label>
+                    <input tabindex="1" type="text" name="firstname" id="firstname">
+                </div>
+                <div class="form-section">
+                    <label for="lastname">Last Name</label>
+                    <input tabindex="1" type="text" name="lastname" id="lastname">
+                </div>
+            </fieldset>
+            <fieldset>
+                <div class="form-section">
+                    <label for="email">Email</label>
+                    <input tabindex="1" type="email" name="email" id="email">
+                </div>
+                <div class="form-section">
+                    <label for="contact">Phone Number</label>
+                    <input tabindex="1" type="tel" maxlength="10" name="contact" id="contact">
+                </div>
+            </fieldset>
+            <fieldset>
+                <div class="form-section">
+                    <label for="password1">Password</label>
+                    <input tabindex="1" type="password" name="password1" id="password1">
+                </div>
+                <div class="form-section">
+                    <label for="password2">Confirm Password</label>
+                    <input tabindex="1" type="password" name="password2" id="password2">
+                </div>
+            </fieldset>
+
+        </form>
+        <div class="controls">
+            <div>
+                <button form="account-create" type="submit">Create account</button>
+                <span id="errorMessageHolder"></span>
+            </div>
+            <p>Already have an account? <a href="#">Log in</a></p>
+        </div>
     </div>
-</body> 
+</body>
 
 </html>

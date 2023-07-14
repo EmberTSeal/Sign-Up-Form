@@ -14,7 +14,7 @@ body {
 
 .branding {
     flex: 0.3 2 400px;
-    height: 100vh;
+    min-height: 100vh;
     background-image: url("assets/cover_image.jpg");
     background-color: black;
     background-repeat: no-repeat;
@@ -113,9 +113,8 @@ input:active,input:focus{
 button{
     background-color: #596D48;
     color: white;
-    margin-top: 30px;
-    margin-left: 40px;
     padding: 12px;
+    margin-right: 20px;
     border: none;
     box-shadow: 0 1px 2px 1px rgb(44, 44, 44);
     width: 200px;
@@ -125,12 +124,18 @@ button{
     cursor: pointer;
 }
 
+.controls{
+    margin-left: 40px;
+}
+
 p>a{
     color: #596D48;
 }
 
-.content>p{
-    padding-left: 40px;
+.controls>div{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
 }
 
 
