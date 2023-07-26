@@ -40,7 +40,7 @@
 
 ## Video Demo 
 
-[Video Demo here.](design/preview_vid.webm)
+<img src="design/preview.gif">  
 
 ## Contact
 
